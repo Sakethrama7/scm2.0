@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is Services page</h1>
+    <hr/>
+    <!-- using fragment -->
+    <div th:replace="~{base :: parent(~{:: .third-content})}">
+        <section id="main-content">
+            This is Dynamic Services passed to base parent.
+        </section>
+        <section id="second-content">
+            This is Second content.
+        </section>
+        <section class="third-content">
+            This is third Content.
+        </section>
+    </div>
+</body>
+</html>
