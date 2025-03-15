@@ -1,10 +1,41 @@
-<div class="parent-fragment" th:fragment="parent(content)">
-    <h1>This is parent Fragment</h1>
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fugit, quod.</p>
-    <div th:replace="${content}"></div>
-</div>
+<!DOCTYPE html>
+<html 
+lang="en" 
+ th:fragment="parent(content,title,script)" 
+xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">SCM</title>
+    <link rel="stylesheet" data-th-href="@{'/css/output.css'}" />
+     <!-- flowbite css linking -->
+     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- common header -->
+     <ul class="p-4">
+        <li>
+            <a th:href="@{'/services'}">Services page</a>
+        </li>
+        <li>
+            <a th:href="@{'/about'}">About page</a>
+        </li>
+        <li>
+            <a th:href="@{'/home'}">Home page</a>
+        </li>
+     </ul>
 
-<div th:fragment="test(content)">
-    <h1>This is Testing fragment</h1>
-    <div th:replace="${content}"></div>
-</div>
+    <!-- main content -->
+     <div class="p-4">
+       <section th:replace="${content}"></section>
+     </div>
+
+
+     <!-- common footer -->
+     <footer class="p-4"> Footer : Learn Code with Durgesh</footer>
+    <!-- flowbite js linking -->
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <th:block th:replace="${script}"></th:block>
+
+</body>
+</html>
