@@ -1,15 +1,5 @@
 package com.scm20.controllers;
 
-import com.scm20.Application;
-import com.scm20.entities.User;
-import com.scm20.forms.UserForm;
-import com.scm20.helpers.Message;
-import com.scm20.helpers.MessageType;
-import com.scm20.services.UserService;
-
-import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import com.scm20.entities.User;
+import com.scm20.forms.UserForm;
+import com.scm20.helpers.Message;
+import com.scm20.helpers.MessageType;
+import com.scm20.services.UserService;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 
 
@@ -77,6 +75,7 @@ public class PageController {
    }
 
    // Sign up 
+   // This is Registration controller
    @RequestMapping("/register")
    public String signUpPage(Model model){
     
@@ -86,9 +85,7 @@ public class PageController {
     return "register";
    }
 
-   // processing register
-   
-   
+   // processing register page
    @RequestMapping(value="/do-register",method=RequestMethod.POST)
    public String processRegister(@Valid @ModelAttribute("userform") UserForm userform,BindingResult rBindingResult, HttpSession session){ // because of this whatever the data comes from the form is stored in this userform object
     System.out.println("processing registration");

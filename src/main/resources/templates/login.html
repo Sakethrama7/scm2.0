@@ -32,7 +32,10 @@
             <div class="text-red-600 text-center my-3" th:if="${param.error}">
               Invalid username or password !!
             </div>
-            <div class="text-green-600 text-center my-3"  th:if="${param.logout}">
+            <div
+              class="text-green-600 text-center my-3"
+              th:if="${param.logout}"
+            >
               You have been successfully logged out !!
             </div>
 
@@ -73,6 +76,7 @@
                   type="password"
                   id="password"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Enter your Password"
                   required
                 />
                 <!--
@@ -100,6 +104,14 @@
                 </button>
               </div>
             </form>
+
+            <div class="social-button-container flex justify-center mt-8">
+              <a
+                class="login-with-google-btn border px-3 py-2"
+                th:href="@{'/oauth2/authorization/google'}"
+                >Sign in with Google</a
+              >
+            </div>
           </div>
         </div>
       </div>

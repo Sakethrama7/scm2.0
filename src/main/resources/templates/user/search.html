@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  th:replace="~{base :: parent(~{ :: #content},~{:: title},~{:: script})}"
+>
+  <head>
+    <title>Search Contacts</title>
+  </head>
+  <body>
+    <div id="content">
+      <!-- sidebar -->
+      <!-- If user is logged in -sidebar -->
+      <div th:if="${loggedInUser}">
+        <div th:replace="~{user/sidebar :: sidebar}"></div>
+      </div>
+
+      <div class="sm:pl-64 pt-20" style="height: 1000px">
+        <div class="flex justify-center flex-col items-center">
+          <h1 class="text-5xl">Search Results</h1>
+          <p th:text="${PageContacts.totalElements}+' results found'"></p>
+        </div>
+
+        <div class="contact_container p-5">
+          <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+            <form
+              th:object="${contactSearchForm}"
+              th:action="@{'/user/contacts/search'}"
+            >
+              <div
+                class="flex space-x-3 p-5 items-center justify-start flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900"
+              >
+                <!-- select box -->
+                <div>
+                  <select
+                    th:field="*{field}"
+                    name="field"
+                    id="countries_disabled"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pr-6 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  >
+                    <option selected value="">Select Field</option>
+                    <option value="name">Name</option>
+                    <option value="phone">Phone</option>
+                    <option value="email">Email</option>
+                  </select>
+                </div>
+
+                <label for="table-search" class="sr-only">Search</label>
+                <div class="relative">
+                  <div
+                    class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
+                  >
+                    <svg
+                      class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    th:field="*{value}"
+                    type="text"
+                    id="table-search-users"
+                    class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Search for users"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  class="px-3 py-2 dark:bg-blue-700 text-white rounded-lg"
+                >
+                  Search
+                </button>
+              </div>
+            </form>
+            <table
+              th:unless="${PageContacts.empty}"
+              class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            >
+              <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-600 dark:text-gray-400"
+              >
+                <tr>
+                  <th scope="col" class="px-6 py-3">Name</th>
+                  <th scope="col" class="px-6 py-3">Phone</th>
+                  <th scope="col" class="px-6 py-3">Links</th>
+                  <th scope="col" class="px-6 py-3">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:object="${c}"
+                  th:each="c : ${PageContacts.content}"
+                  class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <th
+                    scope="row"
+                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    <img
+                      onerror="this.src='data:image/jpeg;base64,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'"
+                      class="w-10 h-10 rounded-full"
+                      th:src="@{*{picture}}"
+                      src="/docs/images/people/profile-picture-1.jpg"
+                      alt="Jese image"
+                    />
+                    <div class="ps-3">
+                      <div class="text-base font-semibold" th:text="*{name}">
+                        Neil Sims
+                      </div>
+                      <div class="font-normal text-gray-500" th:text="*{email}">
+                        neil.sims@flowbite.com
+                      </div>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4">
+                    <i class="fa-solid fa-phone w-4 h-4"></i>
+                    <span th:text="*{phoneNumber}"></span>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div
+                        th:if="*{favourite}"
+                        class="h-2.5 w-2.5 rounded-full bg-green-500 me-3"
+                      ></div>
+                      <a th:href="@{*{websiteLink}}" target="_blank">
+                        <i class="fa-solid w-5 h-5 fa-link me-2"></i>
+                      </a>
+                      <a th:href="@{*{linkedInLink}}" target="_blank">
+                        <i class="fa-brands h-5 w-5 fa-linkedin-in"></i>
+                      </a>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div>
+                      <a href="" class="p-2">
+                        <i class="fa-solid h-5 w-5 fa-trash"></i
+                      ></a>
+                      <a href="" class="p-2">
+                        <i class="fa-solid h-5 w-5 fa-pen"></i>
+                      </a>
+                      <a href="" class="p-2">
+                        <i class="fa-solid h-5 w-5 fa-eye"></i>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div
+              th:unless="${PageContacts.empty}"
+              class="pagination_container p-5 text-center dark:bg-gray-900"
+            >
+              <!-- pagination component -->
+              <nav aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px text-base h-10">
+                  <li th:unless="${PageContacts.first}">
+                    <a
+                      th:href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${PageContacts.number-1}+'&field='+${contactSearchForm.field}+'&value='+${contactSearchForm.value} }"
+                      class="flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                      >Previous</a
+                    >
+                  </li>
+                  <li
+                    th:each="index : ${#numbers.sequence(0,PageContacts.totalPages-1)}"
+                  >
+                    <a
+                      th:href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${index}+'&field='+${contactSearchForm.field}+'&value='+${contactSearchForm.value}}"
+                      th:classappend="${index==PageContacts.number? 'dark:bg-gray-600' : 'dark:bg-gray-800'}"
+                      class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-600 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                      ><span th:text="${index + 1}"></span
+                    ></a>
+                  </li>
+
+                  <li th:unless="${PageContacts.last}">
+                    <a
+                      th:href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${PageContacts.number+1}+'&field='+${contactSearchForm.field}+'&value='+${contactSearchForm.value}}"
+                      class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                      >Next</a
+                    >
+                  </li>
+                </ul>
+              </nav>
+            </div>
+            <h1 class="text-3xl text-center p-4" th:if="${PageContacts.empty}">
+              No Result Found
+            </h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      console.log("Profile page");
+    </script>
+  </body>
+</html>

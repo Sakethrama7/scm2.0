@@ -1,32 +1,16 @@
 package com.scm20.config;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.scm20.services.Impl.SecurityCustomUserDetailService;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 
 
@@ -49,6 +33,9 @@ public class SecurityConfig {
 // Here we are doing that How can we login the users , who are registered.
 @Autowired
 private SecurityCustomUserDetailService userDetailService;
+
+@Autowired
+private OAuthAuthenticationSuccessHandler handler;
 
 // configuration of authentication provider for spring security.
 @Bean
@@ -88,7 +75,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
          // when you submit the login form that will submitted at authenticate page.
          formLogin.loginProcessingUrl("/authenticate");
          // if you login successfully then it will forward to this user/dashboard page
-         formLogin.defaultSuccessUrl("/user/dashboard");
+         formLogin.defaultSuccessUrl("/user/profile");
          //
          // formLogin.failureForwardUrl("/login?error=true");
          //
@@ -121,6 +108,14 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
     });
 
     httpSecurity.csrf(AbstractHttpConfigurer :: disable);
+
+    
+
+    // Oauth configurations
+    httpSecurity.oauth2Login(oauth -> {
+        oauth.loginPage("/login");
+        oauth.successHandler(handler);
+    });
 
     httpSecurity.logout(logoutForm -> {
         logoutForm.logoutUrl("/logout");
